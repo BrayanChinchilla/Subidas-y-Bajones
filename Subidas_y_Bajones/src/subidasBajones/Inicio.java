@@ -4,9 +4,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Inicio {
 	
-	static String[][] board = new String[23][23];
+	static String[][] board = new String[23][12];
 	static String [] player = new String[4];
-	static int boardDimension = 10;
+	static int boardDimension = 5;
 	static int numSubidas = 1;
 	static int numBajadas = 1;
 	static int numPlayers = 2;
@@ -61,12 +61,12 @@ public class Inicio {
 
 			switch (kbReader.nextInt()) {
 			case 1:
-				boardDimension = 10;
+				boardDimension = 5;
 				System.out.println("\nTablero 5x5 escogido exitosamente");
 				delay();
 				break;
 			case 2:
-				boardDimension = 22;
+				boardDimension = 11;
 				System.out.println("\nTablero 11x11 escogido exitosamente");
 				delay();
 				break;
@@ -149,7 +149,8 @@ public class Inicio {
 	public static void startGame() {
 	    // initialize the board
 	    initBoard();
-	    continueGame();
+	    drawBoard();
+	    //continueGame();
 	}
 
 	public static void continueGame() {
@@ -175,14 +176,14 @@ public class Inicio {
 		        if (kbReader.next().equals("MENU")) {
 		            return;
 		        }
-		        move(dice, player);
+		        move(dice, i);
 	        }
 	    }
 	}
 	
 	public static boolean won() {
 		//Checkear si el cuadro final esta ocupado por un jugador
-		if (board[1][boardDimension-1].equals("  $  ")) {
+		if (board[boardDimension*2-1][boardDimension].equals("  $  |")) {
 			return false;
 		}
 		return true;
@@ -198,25 +199,28 @@ public class Inicio {
 	
 	public static void initBoard() {
 	
-	    for (int row = 0; row <= boardDimension; row++) {
-	        for (int column = 0; column <= boardDimension; column++) {        		
-	        		if (row % 2 == 0) {
-	        			board[row][column] = "---";
-	        		}
-	        		else if (row % 2 != 0 && column % 2 == 0) {
-	        			board[row][column] = "|";
+	    for (int row = 0; row <= boardDimension*2; row++) {
+	    		if (row % 2 == 0) {
+	    			board[row][0] = "\t";
+	    		}
+	    		else {
+	    			board[row][0] = "\t|";
+	    		}
+	    		for (int column = 1; column <= boardDimension; column++) {
+	    			if (row % 2 == 0) {
+	        			board[row][column] = " -----";
 	        		}
 	        		else {
-	        			board[row][column] = "     ";
+	        			board[row][column] = "     |";
 	        		}
 	        }
 	    }
 	    // Start and end
-	    board[boardDimension-1][1] = "  $  ";
-	    board[1][boardDimension-1] = "  $  ";
+	    board[1][1] = "  $  |";
+	    board[boardDimension*2-1][boardDimension] = "  $  |";
 	    
-	    generarSubidas();
-	    generarBajadas();
+	    //generarSubidas();
+	    //generarBajadas();
 	    
 	}
 
@@ -224,17 +228,17 @@ public class Inicio {
 		for (int i = 0; i < numSubidas; i++) {
 			int randomRS, randomCS, randomRE, randomCE;
 			do {
-				randomRS = ThreadLocalRandom.current().nextInt(2, boardDimension/2+1) * 2 - 1;
-				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension/2+1) * 2 - 1;
+				randomRS = ThreadLocalRandom.current().nextInt(1, boardDimension) * 2 - 1;
+				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
 			} while (!board[randomRS][randomCS].matches("\\s+"));
 			
 			do {
-				randomRE = ThreadLocalRandom.current().nextInt(1, randomRS/2+1) * 2 - 1;
-				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension/2+1) * 2 - 1;
+				randomRE = ThreadLocalRandom.current().nextInt(boardDimension, randomRS) * 2 - 1;
+				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
 			} while (!board[randomRE][randomCE].matches("\\s+"));
 
-			board[randomRS][randomCS] = "  "+String.valueOf((char)('A'+i))+"  ";
-			board[randomRE][randomCE] = "  "+String.valueOf((char)('A'+i))+"  ";
+			board[randomRS][randomCS] = "  "+String.valueOf((char)('A'+i))+"  |";
+			board[randomRE][randomCE] = "  "+String.valueOf((char)('A'+i))+"  |";
 		}
 	}
 	
@@ -242,24 +246,24 @@ public class Inicio {
 		for (int i = 0; i < numBajadas; i++) {
 			int randomRS, randomCS, randomRE, randomCE;
 			do {
-				randomRS = ThreadLocalRandom.current().nextInt(1, boardDimension/2) * 2 - 1;
-				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension/2+1) * 2 - 1;
+				randomRS = ThreadLocalRandom.current().nextInt(boardDimension, 1) * 2 - 1;
+				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
 			} while (!board[randomRS][randomCS].matches("\\s+"));
 			
 			do {
-				randomRE = ThreadLocalRandom.current().nextInt(randomRS/2+2, boardDimension/2+1) * 2 - 1;
-				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension/2+1) * 2 - 1;
+				randomRE = ThreadLocalRandom.current().nextInt(randomRS/2, 0) * 2 - 1;
+				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
 			} while (!board[randomRE][randomCE].matches("\\s+"));
 
-			board[randomRS][randomCS] = "  "+(1+i)+"  ";
-			board[randomRE][randomCE] = "  "+(1+i)+"  ";
+			board[randomRS][randomCS] = "  "+(1+i)+"  |";
+			board[randomRE][randomCE] = "  "+(1+i)+"  |";
 		}
 	}
 	
 	public static void drawBoard() {
 	//Iterate through every row and column to print the held value
 		System.out.print("\n");
-		for (int row = 0; row <= boardDimension; row++) {
+		for (int row = boardDimension*2; row >= 0; row--) {
 			for (int column = 0; column <= boardDimension; column++) {
 				System.out.print(board[row][column]);
 	        }
@@ -268,12 +272,10 @@ public class Inicio {
 	}
 	
 	public static void delay() {
-		try        
-		{
+		try {
 		    Thread.sleep(1000);
 		} 
-		catch(InterruptedException ex) 
-		{
+		catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
 	}
