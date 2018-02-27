@@ -219,44 +219,33 @@ public class Inicio {
 	    board[1][1] = "  $  |";
 	    board[boardDimension*2-1][boardDimension] = "  $  |";
 	    
-	    //generarSubidas();
-	    //generarBajadas();
+	    generarSubiBaja("subidas");
+	    generarSubiBaja("bajadas");
 	    
 	}
 
-	public static void generarSubidas() {
+	public static void generarSubiBaja(String flag) {
 		for (int i = 0; i < numSubidas; i++) {
 			int randomRS, randomCS, randomRE, randomCE;
 			do {
-				randomRS = ThreadLocalRandom.current().nextInt(1, boardDimension) * 2 - 1;
+				randomRS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1) * 2 - 1;
 				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
-			} while (!board[randomRS][randomCS].matches("\\s+"));
+			} while (! board[randomRS][randomCS].equals("     |"));
 			
 			do {
-				randomRE = ThreadLocalRandom.current().nextInt(boardDimension, randomRS) * 2 - 1;
+				do
+					randomRE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1) * 2 - 1;
+				while (randomRE == randomRS);
 				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
-			} while (!board[randomRE][randomCE].matches("\\s+"));
-
-			board[randomRS][randomCS] = "  "+String.valueOf((char)('A'+i))+"  |";
-			board[randomRE][randomCE] = "  "+String.valueOf((char)('A'+i))+"  |";
-		}
-	}
-	
-	public static void generarBajadas() {
-		for (int i = 0; i < numBajadas; i++) {
-			int randomRS, randomCS, randomRE, randomCE;
-			do {
-				randomRS = ThreadLocalRandom.current().nextInt(boardDimension, 1) * 2 - 1;
-				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
-			} while (!board[randomRS][randomCS].matches("\\s+"));
+			} while (! board[randomRE][randomCE].equals("     |"));
 			
-			do {
-				randomRE = ThreadLocalRandom.current().nextInt(randomRS/2, 0) * 2 - 1;
-				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
-			} while (!board[randomRE][randomCE].matches("\\s+"));
-
-			board[randomRS][randomCS] = "  "+(1+i)+"  |";
-			board[randomRE][randomCE] = "  "+(1+i)+"  |";
+			if (flag.equals("subidas")) {
+				board[randomRS][randomCS] = "  "+String.valueOf((char)('A'+i))+"  |";
+				board[randomRE][randomCE] = "  "+String.valueOf((char)('A'+i))+"  |";
+			} else {
+				board[randomRS][randomCS] = "  "+(1+i)+"  |";
+				board[randomRE][randomCE] = "  "+(1+i)+"  |";
+			}
 		}
 	}
 	
