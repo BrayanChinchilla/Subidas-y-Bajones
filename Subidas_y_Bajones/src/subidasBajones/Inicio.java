@@ -4,12 +4,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Inicio {
 	
-	static String[][] board = new String[23][12];
-	static String [] player = new String[4];
-	static int boardDimension = 5;
+	static String[][] tablero = new String[23][12];
+	static String [] jugador = new String[4];
+	static int dimensionTablero = 5;
 	static int numSubidas = 1;
 	static int numBajadas = 1;
-	static int numPlayers = 2;
+	static int numJugadores = 2;
 	
 	static Scanner kbReader = new Scanner(System.in);
 	
@@ -61,12 +61,12 @@ public class Inicio {
 
 			switch (kbReader.nextInt()) {
 			case 1:
-				boardDimension = 5;
+				dimensionTablero = 5;
 				System.out.println("\nTablero 5x5 escogido exitosamente");
 				delay();
 				break;
 			case 2:
-				boardDimension = 11;
+				dimensionTablero = 11;
 				System.out.println("\nTablero 11x11 escogido exitosamente");
 				delay();
 				break;
@@ -94,10 +94,10 @@ public class Inicio {
 					System.out.println("\nDeterminar el numero de subidas");
 					numSubidas = kbReader.nextInt();				
 					delay();
-					if (numSubidas > boardDimension*boardDimension/3) {
-						System.out.println("\nEl numero de subidas debe estar entre 1 - "+boardDimension*boardDimension/6);
+					if (numSubidas > dimensionTablero*dimensionTablero/3) {
+						System.out.println("\nEl numero de subidas debe estar entre 1 - "+dimensionTablero*dimensionTablero/6);
 					}
-				} while (numSubidas > boardDimension*boardDimension/3);
+				} while (numSubidas > dimensionTablero*dimensionTablero/3);
 				break;
 			case 2: //Gotta set a max. number
 				System.out.println("\nDeterminar el numero de bajadas");
@@ -125,14 +125,14 @@ public class Inicio {
 			switch (kbReader.nextInt()) {
 			case 1:
 				System.out.println("\nDeterminar el numero de jugadores");
-				numPlayers = kbReader.nextInt();				
+				numJugadores = kbReader.nextInt();				
 				delay();
 				break;
 			case 2:
 				System.out.println("\nIngresar el nombre de los jugadores");
-				for (int i = 0; i < numPlayers; i++) {
+				for (int i = 0; i < numJugadores; i++) {
 					System.out.print("Jugador "+(i+1)+": ");
-					player[i] = kbReader.next();
+					jugador[i] = kbReader.next();
 				}
 				delay();
 				break;
@@ -166,10 +166,10 @@ public class Inicio {
 	        }
 
 	        // prompt for move
-	        for (int i = 0; i < numPlayers; i++) {
+	        for (int i = 0; i < numJugadores; i++) {
 	        		int dice = ThreadLocalRandom.current().nextInt(1, 7);
 	        		
-	        		System.out.println(player[i]+" moves "+dice+"spaces");
+	        		System.out.println(jugador[i]+" moves "+dice+"spaces");
 	        		System.out.print("Type any key to confirm move, or type MENU to go back to main menu _");
 	        	
 		        // go back to main menu if user inputs 0
@@ -183,7 +183,7 @@ public class Inicio {
 	
 	public static boolean won() {
 		//Checkear si el cuadro final esta ocupado por un jugador
-		if (board[boardDimension*2-1][boardDimension].equals("  $  |")) {
+		if (tablero[dimensionTablero*2-1][dimensionTablero].equals("  $  |")) {
 			return false;
 		}
 		return true;
@@ -199,25 +199,25 @@ public class Inicio {
 	
 	public static void initBoard() {
 	
-	    for (int row = 0; row <= boardDimension*2; row++) {
+	    for (int row = 0; row <= dimensionTablero*2; row++) {
 	    		if (row % 2 == 0) {
-	    			board[row][0] = "\t";
+	    			tablero[row][0] = "\t";
 	    		}
 	    		else {
-	    			board[row][0] = "\t|";
+	    			tablero[row][0] = "\t|";
 	    		}
-	    		for (int column = 1; column <= boardDimension; column++) {
+	    		for (int column = 1; column <= dimensionTablero; column++) {
 	    			if (row % 2 == 0) {
-	        			board[row][column] = " -----";
+	        			tablero[row][column] = " -----";
 	        		}
 	        		else {
-	        			board[row][column] = "     |";
+	        			tablero[row][column] = "     |";
 	        		}
 	        }
 	    }
 	    // Start and end
-	    board[1][1] = "  $  |";
-	    board[boardDimension*2-1][boardDimension] = "  $  |";
+	    tablero[1][1] = "  $  |";
+	    tablero[dimensionTablero*2-1][dimensionTablero] = "  $  |";
 	    
 	    generarSubiBaja("subidas");
 	    generarSubiBaja("bajadas");
@@ -228,23 +228,23 @@ public class Inicio {
 		for (int i = 0; i < numSubidas; i++) {
 			int randomRS, randomCS, randomRE, randomCE;
 			do {
-				randomRS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1) * 2 - 1;
-				randomCS = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
-			} while (! board[randomRS][randomCS].equals("     |"));
+				randomRS = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1) * 2 - 1;
+				randomCS = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1);
+			} while (! tablero[randomRS][randomCS].equals("     |"));
 			
 			do {
 				do
-					randomRE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1) * 2 - 1;
+					randomRE = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1) * 2 - 1;
 				while (randomRE == randomRS);
-				randomCE = ThreadLocalRandom.current().nextInt(1, boardDimension + 1);
-			} while (! board[randomRE][randomCE].equals("     |"));
+				randomCE = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1);
+			} while (! tablero[randomRE][randomCE].equals("     |"));
 			
 			if (flag.equals("subidas")) {
-				board[randomRS][randomCS] = "  "+String.valueOf((char)('A'+i))+"  |";
-				board[randomRE][randomCE] = "  "+String.valueOf((char)('A'+i))+"  |";
+				tablero[randomRS][randomCS] = "  "+String.valueOf((char)('A'+i))+"  |";
+				tablero[randomRE][randomCE] = "  "+String.valueOf((char)('A'+i))+"  |";
 			} else {
-				board[randomRS][randomCS] = "  "+(1+i)+"  |";
-				board[randomRE][randomCE] = "  "+(1+i)+"  |";
+				tablero[randomRS][randomCS] = "  "+(1+i)+"  |";
+				tablero[randomRE][randomCE] = "  "+(1+i)+"  |";
 			}
 		}
 	}
@@ -252,9 +252,9 @@ public class Inicio {
 	public static void drawBoard() {
 	//Iterate through every row and column to print the held value
 		System.out.print("\n");
-		for (int row = boardDimension*2; row >= 0; row--) {
-			for (int column = 0; column <= boardDimension; column++) {
-				System.out.print(board[row][column]);
+		for (int row = dimensionTablero*2; row >= 0; row--) {
+			for (int column = 0; column <= dimensionTablero; column++) {
+				System.out.print(tablero[row][column]);
 	        }
 			System.out.print("\n");
 		}
@@ -293,7 +293,5 @@ public class Inicio {
 				break;
 			}
 		}
-
 	}
-
 }
