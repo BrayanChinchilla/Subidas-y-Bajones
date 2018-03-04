@@ -11,7 +11,7 @@ public class Inicio {
 			{"Jugador 3", "  %  |", "  $  |"},
 			{"Jugador 4", "  &  |", "  $  |"}}; 
 	
-	static int [][] posicionJugador = new int[][] {{1,1},{1,1},{1,1},{1,1}};
+	static int [][] posicionJugador = new int[4][2];
 	static int dimensionTablero = 5;
 	static int numSubidas = 1;
 	static int numBajadas = 1;
@@ -21,7 +21,7 @@ public class Inicio {
 	
 	public static void menuPrincipal() {
 		System.out.println(
-				"\n==== Menu Principal ==== \n"
+				"\n===== Menu Principal ===== \n"
 				+ "1. Iniciar juego \n"
 				+ "2. Regresar al juego \n"
 				+ "3. Configuracion \n"
@@ -31,7 +31,7 @@ public class Inicio {
 	public static void menuConfig() {
 		while (true) {
 			System.out.println(
-					"\n==== Menu Configuracion ==== \n"
+					"\n===== Menu Configuracion ===== \n"
 					+ "1. Dimension del tablero \n"
 					+ "2. Cantidad de subidas y bajadas \n"
 					+ "3. Ingresar jugadores \n"
@@ -51,110 +51,98 @@ public class Inicio {
 				return;
 			default:
 				System.out.println("\nSeleccionar una opcion valida del menu \n");
-			    delay(1000);
+			    delay(500);
 				break;
 			}
 		}
 	}
 	
 	public static void menuDimensiones() {
-		while (true) {
-			System.out.println(
-					"\n=== Dimension del Tablero === \n"
-					+ "1. 5x5 \n"
-					+ "2. 11x11 \n"
-					+ "3. Regresar");
+		System.out.print(
+				"\n==== Dimension del Tablero ==== \n"
+				+ "1. 5x5 \n"
+				+ "2. 11x11 \n"
+				+ "Eleccion: ");
 
-			switch (kbReader.nextInt()) {
-			case 1:
-				dimensionTablero = 5;
-				System.out.println("\nTablero 5x5 escogido exitosamente");
-				delay(1000);
-				break;
-			case 2:
-				dimensionTablero = 11;
-				System.out.println("\nTablero 11x11 escogido exitosamente");
-				delay(1000);
-				break;
-			case 3:
-				return;
-			default:
-				System.out.println("\nPor favor elegir una opcion valida del menu");
-				delay(1000);
-				break;
-			}
+		switch (kbReader.nextInt()) {
+		case 1:
+			dimensionTablero = 5;
+			System.out.println("\nTablero 5x5 escogido exitosamente!\n"
+					+ "Iniciar un nuevo juego para aplicar cambios");
+			delay(1500);
+			break;
+		case 2:
+			dimensionTablero = 11;
+			System.out.println("\nTablero 11x11 escogido exitosamente!\n"
+					+ "Iniciar un nuevo juego para aplicar cambios");
+			delay(1500);
+			break;
+		default:
+			System.out.println("\nOpcion no valida, por favor prueba de nuevo");
+			delay(1000);
 		}
 	}
 	
 	public static void menuSubiBaja() {
-		while (true) {
-			System.out.println(
-					"\n=== Subidas y Bajadas === \n"
-					+ "1. Cantidad de Subidas \n"
-					+ "2. Cantidad de Bajadas \n"
-					+ "3. Regresar");
+		System.out.println("\n==== Menu Casillas Especiales ====");
+		do {
+			System.out.print("Determinar el numero de subidas: ");
+			numSubidas = kbReader.nextInt();				
+			delay(500);
 			
-			switch (kbReader.nextInt()) {
-			case 1: //Gotta set a max. number
-				do {
-					System.out.println("\nDeterminar el numero de subidas");
-					numSubidas = kbReader.nextInt();				
-					delay(1000);
-					if (numSubidas > dimensionTablero*dimensionTablero/3) {
-						System.out.println("\nEl numero de subidas debe estar entre 1 - "+dimensionTablero*dimensionTablero/6);
-					}
-				} while (numSubidas > dimensionTablero*dimensionTablero/3);
-				break;
-			case 2: //Gotta set a max. number
-				System.out.println("\nDeterminar el numero de bajadas");
-				numBajadas = kbReader.nextInt();
-				delay(1000);
-				break;
-			case 3:
-				return;
-			default:
-				System.out.println("\nPor favor elegir una opcion valida del menu");
-				delay(1000);
-				break;
+			System.out.print("Determinar el numero de bajadas: ");
+			numBajadas = kbReader.nextInt();				
+			delay(500);
+						
+			if (numSubidas + numBajadas> dimensionTablero*dimensionTablero/3) {
+				System.out.println("\nLas casillas especiales no pueden exceder dos tercios del tablero...\n"
+						+ "Prueba con una combinacion que sume entre 0 - "+dimensionTablero*dimensionTablero/3+" casillas especiales\n");
+				delay(500);
 			}
-		}
+		} while (numSubidas + numBajadas > dimensionTablero*dimensionTablero/3);
+
+		System.out.println("\nTablero con "+numSubidas+" subidas y "+numBajadas+" bajadas configurado exitosamente!\n"
+				+ "Iniciar un nuevo juego para aplicar cambios");
+		delay(1500);
 	}
 	
 	public static void menuJugadores() {
-		while (true) {
-			System.out.println(
-					"\n=== Jugadores === \n"
-					+ "1. Numero de Jugadores \n"
-					+ "2. Ingresar Jugadores \n"
-					+ "3. Regresar");
+		System.out.println("\n==== Menu Jugadores ====");
+		do {
+			System.out.print("Determinar el numero de jugadores: ");
+			numJugadores = kbReader.nextInt();				
+			delay(500);
 			
-			switch (kbReader.nextInt()) {
-			case 1:
-				System.out.println("\nDeterminar el numero de jugadores");
-				numJugadores = kbReader.nextInt();				
-				delay(1000);
-				break;
-			case 2:
-				System.out.println("\nIngresar el nombre de los jugadores");
-				for (int i = 0; i < numJugadores; i++) {
-					System.out.print("Jugador "+(i+1)+": ");
-					jugador[i][0] = kbReader.next();
-				}
-				delay(1000);
-				break;
-			case 3:
-				return;
-			default:
-				System.out.println("\nPor favor elegir una opcion valida del menu");
-				delay(1000);
-				break;
+			if (numJugadores > 4 || numJugadores < 2) {
+				System.out.println("\nNumero de jugadores debe estar entre 2 y 4");
+				delay(500);
 			}
+			
+		} while (numJugadores > 4 || numJugadores < 2);
+
+		System.out.println("Ingresar el nombre de los jugadores");
+		for (int i = 0; i < numJugadores; i++) {
+			System.out.print("Jugador "+(i+1)+": ");
+			jugador[i][0] = kbReader.next();
 		}
+		System.out.println("\nNuevos jugadores ingresados exitosamente!\n"
+				+ "Iniciar un nuevo juego para aplicar cambios");
+		delay(1500);
 	}
 	
 	public static void iniciarJuego() {
 	    // configurar el tablero
 	    configurarTablero();
+	    
+		for (int fila = 0; fila < posicionJugador.length; fila++) {
+			for (int columna = 0; columna < posicionJugador[fila].length; columna++) {
+				posicionJugador[fila][columna] = 1;
+			}
+		}
+		
+		for (int fila = 0; fila < jugador.length; fila++) {
+			jugador[fila][2] = "  $  |";
+		}
 	    continuarJuego();
 	}
 
@@ -175,7 +163,7 @@ public class Inicio {
 	        		System.out.print("Presione cualquier tecla para confirmar, o ecribe MENU para regresar al Menu Principal _");
 	        	
 		        // go back to main menu if user inputs 0
-		        if (kbReader.next().equals("MENU")) {
+		        if (kbReader.next().equalsIgnoreCase("MENU")) {
 		            return;
 		        }
 		        mover(dice, i);
@@ -185,9 +173,9 @@ public class Inicio {
 		        		dibujarTablero();
 		        		System.out.println("\nFelicidades! El juego ha terminado\n"
 		        				+ jugador[i][0]+" es el ganador!\n");
-		        		delay(3000);
+		        		delay(1500);
 		            imprimirTablaPosiciones();
-		            delay(15000);
+		            delay(5000);
 		            return;
 		        }
 	        }
@@ -199,7 +187,6 @@ public class Inicio {
 		if (tablero[dimensionTablero*2-1][dimensionTablero].equals("  $  |")) {
 			return false;
 		}
-		delay(1000);
 		return true;
 	}
 	
@@ -259,7 +246,24 @@ public class Inicio {
 			break;	
 		}
 		
-		if (jugador[n][2].matches("\\s+[A-Z]\\s+\\|")) {	
+		if (jugador[n][2].matches("\\s+[A-Z]\\s+\\|")) {
+			for (int x = 0; x < numJugadores; x++) {
+				if(jugador[x][2].equals(jugador[n][2]) && x != n && posicionJugador[x][0] > posicionJugador[n][0]) {
+					dibujarTablero();
+					delay(500);
+					System.out.print(jugador[n][0]+" ha caido en la subida "+jugador[n][2].substring(2,3)+"! Presiona una tecla para subir _");
+					kbReader.next();
+					
+					tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][2];
+					posicionJugador[n][0] = posicionJugador[x][0];
+					posicionJugador[n][1] = posicionJugador[x][1];
+					tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][1];
+					
+					jugador[x][2] = jugador[n][1];
+					return;
+				}
+			}
+			
 			for (int fila = posicionJugador[n][0] + 1; fila < dimensionTablero*2; fila++) {
 				for (int columna = 1; columna <= dimensionTablero; columna++) {
 					if(tablero[fila][columna].equals(jugador[n][2])) {
@@ -277,7 +281,24 @@ public class Inicio {
 				}
 			}
 		}
-		else if (jugador[n][2].matches("\\s+[1-9]\\s+\\|")){
+		else if (jugador[n][2].matches("\\s+[1-9]\\s+\\|")) {
+			for (int x = 0; x < numJugadores; x++) {
+				if(jugador[x][2].equals(jugador[n][2]) && x != n && posicionJugador[x][0] < posicionJugador[n][0]) {
+					dibujarTablero();
+					delay(500);
+					System.out.print(jugador[n][0]+" ha caido en la bajada "+jugador[n][2].substring(2,3)+"! Presiona una tecla para bajar _");
+					kbReader.next();
+					
+					tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][2];
+					posicionJugador[n][0] = posicionJugador[x][0];
+					posicionJugador[n][1] = posicionJugador[x][1];
+					tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][1];
+					
+					jugador[x][2] = jugador[n][1];
+					return;
+				}
+			}
+			
 			for (int fila = posicionJugador[n][0] - 1; fila > 0; fila--) {
 				for (int columna = 1; columna <= dimensionTablero; columna++) {
 					if(tablero[fila][columna].equals(jugador[n][2])) {
@@ -298,7 +319,7 @@ public class Inicio {
 	}
 	
 	public static void imprimirTablaPosiciones() {
-		System.out.println("\n === Tabla de Posiciones ===");
+		System.out.println("=== Tabla de Posiciones ===");
 		for (int i = 0; i < numJugadores;) {
 			for(int fila = dimensionTablero*2-1; fila > 0; fila--) {
 				for (int columna = dimensionTablero; columna > 0; columna--) {
@@ -415,8 +436,9 @@ public class Inicio {
 				menuConfig();
 				break;
 			case 4:
-				System.out.println("Gracias por jugar! \n"
+				System.out.println("\nGracias por jugar! \n"
 						+ "Vuelve pronto");
+				delay(3000);
 				return;
 			default:
 				System.out.println("Seleccionar una opcion valida del menu");
