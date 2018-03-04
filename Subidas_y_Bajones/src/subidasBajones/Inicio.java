@@ -2,6 +2,7 @@ package subidasBajones;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
+//Ready to deploy
 public class Inicio {
 	
 	static String[][] tablero = new String[23][12];
