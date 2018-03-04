@@ -1,8 +1,8 @@
+//Just missing the comments but ready to go
 package subidasBajones;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-//Ready to deploy
 public class Inicio {
 	
 	static String[][] tablero = new String[23][12];
@@ -19,15 +19,6 @@ public class Inicio {
 	static int numJugadores = 2;
 	
 	static Scanner kbReader = new Scanner(System.in);
-	
-	public static void menuPrincipal() {
-		System.out.println(
-				"\n===== Menu Principal ===== \n"
-				+ "1. Iniciar juego \n"
-				+ "2. Regresar al juego \n"
-				+ "3. Configuracion \n"
-				+ "4. Salir");
-	}
 	
 	public static void menuConfig() {
 		while (true) {
@@ -59,34 +50,45 @@ public class Inicio {
 	}
 	
 	public static void menuDimensiones() {
-		System.out.print(
-				"\n==== Dimension del Tablero ==== \n"
-				+ "1. 5x5 \n"
-				+ "2. 11x11 \n"
-				+ "Eleccion: ");
-
-		switch (kbReader.nextInt()) {
-		case 1:
-			dimensionTablero = 5;
-			System.out.println("\nTablero 5x5 escogido exitosamente!\n"
-					+ "Iniciar un nuevo juego para aplicar cambios");
-			delay(1500);
-			break;
-		case 2:
-			dimensionTablero = 11;
-			System.out.println("\nTablero 11x11 escogido exitosamente!\n"
-					+ "Iniciar un nuevo juego para aplicar cambios");
-			delay(1500);
-			break;
-		default:
-			System.out.println("\nOpcion no valida, por favor prueba de nuevo");
-			delay(1000);
+		while (true) {
+			System.out.print(
+					"\n==== Dimension del Tablero ==== \n"
+					+ "1. 5x5 \n"
+					+ "2. 11x11 \n"
+					+ "Eleccion: ");
+	
+			switch (kbReader.nextInt()) {
+			case 1:
+				dimensionTablero = 5;
+				System.out.println("\nTablero 5x5 escogido exitosamente!\n"
+						+ "Iniciar un nuevo juego para aplicar cambios");
+				delay(1500);
+				if (numSubidas > 4 || numBajadas > 4) {
+					System.out.println("\nEl numero de subidas y bajadas previamente elegidos no pueden ser utilizados en este tablero.\n"
+							+ "Se han reestablecido los valores por defecto, \n"
+							+ "pero sientete libre de visitar el menu de casillas especiales de nuevo.");
+					delay(4000);
+					numSubidas = 1;
+					numBajadas = 1;
+				}
+				return;
+			case 2:
+				dimensionTablero = 11;
+				System.out.println("\nTablero 11x11 escogido exitosamente!\n"
+						+ "Iniciar un nuevo juego para aplicar cambios");
+				delay(1500);
+				return;
+			default:
+				System.out.println("\nOpcion no valida, por favor prueba de nuevo");
+				delay(1000);
+			}
 		}
 	}
 	
 	public static void menuSubiBaja() {
-		System.out.println("\n==== Menu Casillas Especiales ====");
-		do {
+		while (true) {
+			System.out.println("\n==== Menu Casillas Especiales ====");
+
 			System.out.print("Determinar el numero de subidas: ");
 			numSubidas = kbReader.nextInt();				
 			delay(500);
@@ -95,12 +97,20 @@ public class Inicio {
 			numBajadas = kbReader.nextInt();				
 			delay(500);
 						
-			if (numSubidas + numBajadas> dimensionTablero*dimensionTablero/3) {
-				System.out.println("\nLas casillas especiales no pueden exceder dos tercios del tablero...\n"
-						+ "Prueba con una combinacion que sume entre 0 - "+dimensionTablero*dimensionTablero/3+" casillas especiales\n");
+			if ((numSubidas > 4 || numBajadas > 4) && (dimensionTablero == 5)) {
+				System.out.println("\nEn el tablero 5x5 se pueden configurar un maximo de 4 casillas especiales de cada tipo.\n"
+						+ "Por favor prueba de nuevo\n");
 				delay(500);
+			}	
+			else if ((numSubidas > 15 || numBajadas > 15) && (dimensionTablero == 11)) {
+				System.out.println("\nEn el tablero 11x11 se pueden configurar un maximo de 15 casillas especiales de cada tipo.\n"
+						+ "Por favor prueba de nuevo");
+				delay(1500);
 			}
-		} while (numSubidas + numBajadas > dimensionTablero*dimensionTablero/3);
+			else {
+				break;
+			}	
+		}
 
 		System.out.println("\nTablero con "+numSubidas+" subidas y "+numBajadas+" bajadas configurado exitosamente!\n"
 				+ "Iniciar un nuevo juego para aplicar cambios");
@@ -282,7 +292,7 @@ public class Inicio {
 				}
 			}
 		}
-		else if (jugador[n][2].matches("\\s+[1-9]\\s+\\|")) {
+		else if (jugador[n][2].matches("\\s+[1-9]+\\s+\\|")) {
 			for (int x = 0; x < numJugadores; x++) {
 				if(jugador[x][2].equals(jugador[n][2]) && x != n && posicionJugador[x][0] < posicionJugador[n][0]) {
 					dibujarTablero();
@@ -394,8 +404,8 @@ public class Inicio {
 				tablero[rndFila1][rndColumna1] = "  "+String.valueOf((char)('A'+i))+"  |";
 				tablero[rndFila2][rndColumna2] = "  "+String.valueOf((char)('A'+i))+"  |";
 			} else {
-				tablero[rndFila1][rndColumna1] = "  "+(1+i)+"  |";
-				tablero[rndFila2][rndColumna2] = "  "+(1+i)+"  |";
+				tablero[rndFila1][rndColumna1] = " "+String.format("%2d", i)+"  |";
+				tablero[rndFila2][rndColumna2] = " "+String.format("%2d", i)+"  |";
 			}
 		}
 	}
@@ -423,8 +433,12 @@ public class Inicio {
 	
 	public static void main(String[] args) {
 		while (true) {
-			
-			menuPrincipal();
+			System.out.println(
+					"\n===== Menu Principal ===== \n"
+					+ "1. Iniciar juego \n"
+					+ "2. Regresar al juego \n"
+					+ "3. Configuracion \n"
+					+ "4. Salir");
 						
 			switch (kbReader.nextInt()) {
 			case 1:
