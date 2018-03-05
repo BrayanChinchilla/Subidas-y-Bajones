@@ -2,39 +2,33 @@ package subidasBajones;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-//Ready to deploy
 public class Inicio {
-	
-	static String[][] tablero = new String[23][12];
-	static String [][] jugador = new String[][] 
-			{{"Jugador 1", "  #  |", "  $  |"},
-			{"Jugador 2", "  @  |", "  $  |"},
-			{"Jugador 3", "  %  |", "  $  |"},
-			{"Jugador 4", "  &  |", "  $  |"}}; 
-	
-	static int [][] posicionJugador = new int[][] {{1,1},{1,1},{1,1},{1,1}};
-	static int dimensionTablero = 5;
-	static int numSubidas = 1;
-	static int numBajadas = 1;
-	static int numJugadores = 2;
+		
+	Jugador[] jugador = new Jugador[]{new Jugador("Jugador 1", "  #  |", "  $  |"),
+            new Jugador("Jugador 2", "  @  |", "  $  |"),
+            new Jugador("Jugador 3", "  %  |", "  $  |"),
+            new Jugador("Jugador 4", "  &  |", "  $  |")};
+	int dimensionTablero = 5;
+	int numSubidas = 1;
+	int numBajadas = 1;
+	int numJugadores = 2;
 	
 	static Scanner kbReader = new Scanner(System.in);
 	
-	public static void menuPrincipal() {
-		System.out.println(
-				"\n==== Menu Principal ==== \n"
-				+ "1. Iniciar juego \n"
-				+ "2. Regresar al juego \n"
-				+ "3. Configuracion \n"
-				+ "4. Salir");
+	public Inicio() {
+		for (Jugador j : jugador) {
+			j.fila = 1;
+			j.columna = 1;
+			j.casilla = "  $  |";
+		}
 	}
 	
-	public static void menuConfig() {
+	public void menuConfig() {
 		while (true) {
 			System.out.println(
 					"\n==== Menu Configuracion ==== \n"
 					+ "1. Dimension del tablero \n"
-					+ "2. Cantidad de subidas y bajadas \n"
+					+ "2. Casillas Especiales \n"
 					+ "3. Ingresar jugadores \n"
 					+ "4. Regresar");
 			
@@ -58,365 +52,270 @@ public class Inicio {
 		}
 	}
 	
-	public static void menuDimensiones() {
+	public void menuDimensiones() {
 		while (true) {
-			System.out.println(
-					"\n=== Dimension del Tablero === \n"
+			System.out.print(
+					"\n==== Dimension del Tablero ==== \n"
 					+ "1. 5x5 \n"
 					+ "2. 11x11 \n"
-					+ "3. Regresar");
-
+					+ "Eleccion: ");
+	
 			switch (kbReader.nextInt()) {
 			case 1:
 				dimensionTablero = 5;
-				System.out.println("\nTablero 5x5 escogido exitosamente");
-				delay(1000);
-				break;
+				System.out.println("\nTablero 5x5 escogido exitosamente!\n"
+						+ "Iniciar un nuevo juego para aplicar cambios");
+				delay(1500);
+				if (numSubidas > 4 || numBajadas > 4) {
+					System.out.println("\nEl numero de subidas y bajadas previamente elegidos no pueden ser utilizados en este tablero.\n"
+							+ "Se han reestablecido los valores por defecto, \n"
+							+ "pero sientete libre de visitar el menu de casillas especiales de nuevo.");
+					delay(4000);
+					numSubidas = 1;
+					numBajadas = 1;
+				}
+				return;
 			case 2:
 				dimensionTablero = 11;
-				System.out.println("\nTablero 11x11 escogido exitosamente");
-				delay(1000);
-				break;
-			case 3:
+				System.out.println("\nTablero 11x11 escogido exitosamente!\n"
+						+ "Iniciar un nuevo juego para aplicar cambios");
+				delay(1500);
 				return;
 			default:
-				System.out.println("\nPor favor elegir una opcion valida del menu");
+				System.out.println("\nOpcion no valida, por favor prueba de nuevo");
 				delay(1000);
 				break;
 			}
 		}
 	}
 	
-	public static void menuSubiBaja() {
+	public void menuSubiBaja() {
 		while (true) {
-			System.out.println(
-					"\n=== Subidas y Bajadas === \n"
-					+ "1. Cantidad de Subidas \n"
-					+ "2. Cantidad de Bajadas \n"
-					+ "3. Regresar");
+			System.out.println("\n==== Menu Casillas Especiales ====");
+
+			System.out.print("Determinar el numero de subidas: ");
+			numSubidas = kbReader.nextInt();				
+			delay(500);
 			
-			switch (kbReader.nextInt()) {
-			case 1: //Gotta set a max. number
-				do {
-					System.out.println("\nDeterminar el numero de subidas");
-					numSubidas = kbReader.nextInt();				
-					delay(1000);
-					if (numSubidas > dimensionTablero*dimensionTablero/3) {
-						System.out.println("\nEl numero de subidas debe estar entre 1 - "+dimensionTablero*dimensionTablero/6);
-					}
-				} while (numSubidas > dimensionTablero*dimensionTablero/3);
-				break;
-			case 2: //Gotta set a max. number
-				System.out.println("\nDeterminar el numero de bajadas");
-				numBajadas = kbReader.nextInt();
-				delay(1000);
-				break;
-			case 3:
-				return;
-			default:
-				System.out.println("\nPor favor elegir una opcion valida del menu");
-				delay(1000);
-				break;
+			System.out.print("Determinar el numero de bajadas: ");
+			numBajadas = kbReader.nextInt();				
+			delay(500);
+						
+			if ((numSubidas > 4 || numBajadas > 4) && (dimensionTablero == 5)) {
+				System.out.println("\nEn el tablero 5x5 se pueden configurar un maximo de 4 casillas especiales de cada tipo.\n"
+						+ "Por favor prueba de nuevo\n");
+				delay(500);
+			}	
+			else if ((numSubidas > 15 || numBajadas > 15) && (dimensionTablero == 11)) {
+				System.out.println("\nEn el tablero 11x11 se pueden configurar un maximo de 15 casillas especiales de cada tipo.\n"
+						+ "Por favor prueba de nuevo");
+				delay(500);
 			}
+			else {
+				break;
+			}	
 		}
+
+		System.out.println("\nTablero con "+numSubidas+" subidas y "+numBajadas+" bajadas configurado exitosamente!\n"
+				+ "Iniciar un nuevo juego para aplicar cambios");
+		delay(1500);
 	}
 	
-	public static void menuJugadores() {
-		while (true) {
-			System.out.println(
-					"\n=== Jugadores === \n"
-					+ "1. Numero de Jugadores \n"
-					+ "2. Ingresar Jugadores \n"
-					+ "3. Regresar");
+	public void menuJugadores() {
+		System.out.println("\n==== Menu Jugadores ====");
+		do {
+			System.out.print("Determinar el numero de jugadores: ");
+			numJugadores = kbReader.nextInt();				
+			delay(500);
 			
-			switch (kbReader.nextInt()) {
-			case 1:
-				System.out.println("\nDeterminar el numero de jugadores");
-				numJugadores = kbReader.nextInt();				
-				delay(1000);
-				break;
-			case 2:
-				System.out.println("\nIngresar el nombre de los jugadores");
-				for (int i = 0; i < numJugadores; i++) {
-					System.out.print("Jugador "+(i+1)+": ");
-					jugador[i][0] = kbReader.next();
-				}
-				delay(1000);
-				break;
-			case 3:
-				return;
-			default:
-				System.out.println("\nPor favor elegir una opcion valida del menu");
-				delay(1000);
-				break;
+			if (numJugadores > 4 || numJugadores < 2) {
+				System.out.println("\nNumero de jugadores debe estar entre 2 y 4");
+				delay(500);
 			}
+			
+		} while (numJugadores > 4 || numJugadores < 2);
+
+		System.out.println("Ingresar el nombre de los jugadores");
+		for (int i = 0; i < numJugadores; i++) {
+			System.out.print("Jugador "+(i+1)+": ");
+			jugador[i].nombre = kbReader.next();
 		}
+		System.out.println("\nNuevos jugadores ingresados exitosamente!\n"
+				+ "Iniciar un nuevo juego para aplicar cambios");
+		delay(1500);
 	}
 	
-	public static void iniciarJuego() {
-	    // configurar el tablero
-	    configurarTablero();
-	    continuarJuego();
+	public Tablero iniciarJuego() {
+	    // configurar el tablero	
+	    Tablero tablero = new Tablero(dimensionTablero);
+	    tablero.generarSubida(numSubidas);
+	    tablero.generarBajada(numBajadas);
+	    
+	    return tablero;
 	}
 
-	public static void continuarJuego() {
-
-	    while (true) {
+	public int continuarJuego(Tablero tablero, int turno) {
+		int i = turno;
+		while (true) {
 	    		//Iterar sobre los jugadores
-	        for (int i = 0; i < numJugadores; i++) {
-	        	
-		        dibujarTablero();
-
-			    // prompt for move
-	        		int dice = ThreadLocalRandom.current().nextInt(1, 7);
+	        for (; i < numJugadores; i++) {
 	        		
-
 	        		delay(500);
-	        		System.out.println(jugador[i][0]+" se mueve "+dice+" espacios");
+		        tablero.dibujarTablero();
+
+			    // Tirar dado y esperar confirmacion del jugador
+	        		int dice = ThreadLocalRandom.current().nextInt(1, 7);	        		
+	        		System.out.println(jugador[i].nombre+" se mueve "+dice+" espacios");
 	        		System.out.print("Presione cualquier tecla para confirmar, o ecribe MENU para regresar al Menu Principal _");
 	        	
-		        // go back to main menu if user inputs 0
-		        if (kbReader.next().equals("MENU")) {
-		            return;
+		        // Si el jugador desea, puede salir del juego y regresar al menu
+		        if (kbReader.next().equalsIgnoreCase("MENU")) {
+		            return i;
 		        }
-		        mover(dice, i);
+		        
+		        jugador[i].mover(dice, tablero, jugador);
+				jugador[i].estaOcupada(jugador);
+		        
+		        if (jugador[i].casilla.matches("\\s+[A-Z]\\s+\\|")) {
+		        		Subida s = jugador[i].puedeSubir(tablero);
+		        		if (s != null) {
+				    		delay(500);
+				    		tablero.dibujarTablero();
+			    			System.out.print(jugador[i].nombre+" ha caido en la subida "+jugador[i].casilla.substring(2,3)+"! Presiona una tecla para subir _");
+		       			kbReader.next();
+		       			jugador[i].subir(tablero, s);
+						jugador[i].estaOcupada(jugador);
+		        		}
+		        }
+		        
+		        if (jugador[i].casilla.matches("\\s+[1-9]+\\s+\\|")) {
+		        		Bajada b = jugador[i].puedeBajar(tablero);
+		        		if (b != null) {
+				    		delay(500);
+				    		tablero.dibujarTablero();
+			    			System.out.print(jugador[i].nombre+" ha caido en la bajada  "+jugador[i].casilla.substring(1,3)+"! Presiona una tecla para bajar _");
+		       			kbReader.next();
+		       			jugador[i].bajar(tablero, b);
+						jugador[i].estaOcupada(jugador);
+		        		}
+		        }
 		        
 		        // verificar si el juego ha sido ganado
-		        if (ganado()) {
-		        		dibujarTablero();
+		        if (ganado(tablero)) {
+		        		tablero.dibujarTablero();
 		        		System.out.println("\nFelicidades! El juego ha terminado\n"
-		        				+ jugador[i][0]+" es el ganador!\n");
+		        				+ jugador[i].nombre+" es el ganador!\n");
 		        		delay(3000);
-		            imprimirTablaPosiciones();
-		            delay(15000);
-		            return;
+		        		
+		        		Tablero tableroVacio = new Tablero(dimensionTablero);
+		        		tableroVacio.dibujarTablero();
+		            imprimirTablaPosiciones(tablero);
+		            delay(6000);
+		            
+		            return 0;
 		        }
 	        }
+	        i = 0;
 	    }
 	}
 	
-	public static boolean ganado() {
+	public boolean ganado(Tablero tablero) {
 		//Checkear si el cuadro final esta ocupado por un jugador
-		if (tablero[dimensionTablero*2-1][dimensionTablero].equals("  $  |")) {
+		if (tablero.matriz[dimensionTablero*2-1][dimensionTablero].equals("  $  |")) {
 			return false;
 		}
 		delay(1000);
 		return true;
 	}
 	
-	public static void mover(int dado, int n) {
+	public void imprimirTablaPosiciones(Tablero tablero) {
+		System.out.println("\n==== Tabla de Posiciones ====");
+		for (int i = 0; i < numJugadores;) {		
+			for(int f = dimensionTablero*2-1; f > 0; f--) {
+				if (f % 4 == 1) {
+					for (int c = dimensionTablero; c > 0; c--) {
+						if (tablero.matriz[f][c].equals(jugador[0].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[0].nombre);
+							i++;
+						}
+						else if (tablero.matriz[f][c].equals(jugador[1].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[1].nombre);
+							i++;
+						}
+						else if (tablero.matriz[f][c].equals(jugador[2].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[2].nombre);
+							i++;
+						}
+						else if (tablero.matriz[f][c].equals(jugador[3].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[3].nombre);
+							i++;
+						}
+					}
+				} else {
+					for (int c = 1; c <= dimensionTablero; c++) {
+						if (tablero.matriz[f][c].equals(jugador[0].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[0].nombre);
+							i++;
+						}
+						else if (tablero.matriz[f][c].equals(jugador[1].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[1].nombre);
+							i++;
+						}
+						else if (tablero.matriz[f][c].equals(jugador[2].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[2].nombre);
+							i++;
+						}
+						else if (tablero.matriz[f][c].equals(jugador[3].simbolo)) {
+							System.out.println(i+1+". lugar: "+jugador[3].nombre);
+							i++;
+						}
+					}
+				}
 
-		tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][2];
-		
-		if (posicionJugador[n][0] % 4 == 1) {
-			if(posicionJugador[n][1] + dado > dimensionTablero*2) {
-				posicionJugador[n][0] = posicionJugador[n][0] + 4;
-				posicionJugador[n][1] = (posicionJugador[n][1] + dado) % dimensionTablero;
 			}
-			else if (posicionJugador[n][1] + dado > dimensionTablero) {
-				posicionJugador[n][0] = posicionJugador[n][0] + 2;
-				posicionJugador[n][1] = dimensionTablero*2 + 1 - (posicionJugador[n][1] + dado);
-			}
-			else {
-				posicionJugador[n][1] = posicionJugador[n][1] + dado;
-			}
-		}
-		else {
-			if(posicionJugador[n][1] - dado > 0) {
-				posicionJugador[n][1] = posicionJugador[n][1] - dado;
-			}
-			else if (posicionJugador[n][1] - dado > -dimensionTablero) {
-				posicionJugador[n][0] = posicionJugador[n][0] + 2;
-				posicionJugador[n][1] = 1 - (posicionJugador[n][1] - dado);
-			}
-			else {
-				posicionJugador[n][0] = posicionJugador[n][0] + 4;
-				posicionJugador[n][1] = dimensionTablero*2 + (posicionJugador[n][1] - dado);
-			}
-		}
-		if (posicionJugador[n][0] > dimensionTablero*2-1) {
-			posicionJugador[n][0] = dimensionTablero*2-1;
-			posicionJugador[n][1] = dimensionTablero;
-		}
-		jugador[n][2] = tablero[posicionJugador[n][0]][posicionJugador[n][1]];
-		tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][1];
-		
-		switch (jugador[n][2].substring(2,3)){
-		case "#":
-			jugador[n][2] = jugador[0][2];
-			jugador[0][2] = jugador[n][1];
-			break;
-		case "@":
-			jugador[n][2] = jugador[1][2];
-			jugador[1][2] = jugador[n][1];
-			break;
-		case "%":
-			jugador[n][2] = jugador[2][2];
-			jugador[2][2] = jugador[n][1];
-			break;
-		case "&":
-			jugador[n][2] = jugador[3][2];
-			jugador[3][2] = jugador[n][1];
-			break;	
-		}
-		
-		if (jugador[n][2].matches("\\s+[A-Z]\\s+\\|")) {	
-			for (int fila = posicionJugador[n][0] + 1; fila < dimensionTablero*2; fila++) {
-				for (int columna = 1; columna <= dimensionTablero; columna++) {
-					if(tablero[fila][columna].equals(jugador[n][2])) {
-						dibujarTablero();
-						delay(500);
-						System.out.print(jugador[n][0]+" ha caido en la subida "+jugador[n][2].substring(2,3)+"! Presiona una tecla para subir _");
-						kbReader.next();
-						
-						tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][2];
-						posicionJugador[n][0] = fila;
-						posicionJugador[n][1] = columna;
-						tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][1];
-						return;
-					}
-				}
-			}
-		}
-		else if (jugador[n][2].matches("\\s+[1-9]\\s+\\|")){
-			for (int fila = posicionJugador[n][0] - 1; fila > 0; fila--) {
-				for (int columna = 1; columna <= dimensionTablero; columna++) {
-					if(tablero[fila][columna].equals(jugador[n][2])) {
-						dibujarTablero();
-						delay(500);
-						System.out.print(jugador[n][0]+" ha caido en la bajada "+jugador[n][2].substring(2,3)+"! Presiona una tecla para bajar _");
-						kbReader.next();
-						
-						tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][2];
-						posicionJugador[n][0] = fila;
-						posicionJugador[n][1] = columna;
-						tablero[posicionJugador[n][0]][posicionJugador[n][1]] = jugador[n][1];
-						return;
-					}
-				}
-			}
-		}
-	}
-	
-	public static void imprimirTablaPosiciones() {
-		System.out.println("\n === Tabla de Posiciones ===");
-		for (int i = 0; i < numJugadores;) {
-			for(int fila = dimensionTablero*2-1; fila > 0; fila--) {
-				for (int columna = dimensionTablero; columna > 0; columna--) {
-					if (tablero[fila][columna].equals(jugador[0][1])) {
-						System.out.println(i+1+". lugar: "+jugador[0][0]);
-						i++;
-					}
-					else if (tablero[fila][columna].equals(jugador[1][1])) {
-						System.out.println(i+1+". lugar: "+jugador[1][0]);
-						i++;
-					}
-					else if (tablero[fila][columna].equals(jugador[2][1])) {
-						System.out.println(i+1+". lugar: "+jugador[2][0]);
-						i++;
-					}
-					else if (tablero[fila][columna].equals(jugador[3][1])) {
-						System.out.println(i+1+". lugar: "+jugador[3][0]);
-						i++;
-					}
-				}
-			}
-		}
-	}
-	
-	public static void configurarTablero() {
-	
-	    for (int fila = 0; fila <= dimensionTablero*2; fila++) {
-	    		if (fila % 2 == 0) {
-	    			tablero[fila][0] = "\t";
-	    		}
-	    		else {
-	    			tablero[fila][0] = "\t|";
-	    		}
-	    		for (int columna = 1; columna <= dimensionTablero; columna++) {
-	    			if (fila % 2 == 0) {
-	        			tablero[fila][columna] = " -----";
-	        		}
-	        		else {
-	        			tablero[fila][columna] = "     |";
-	        		}
-	        }
-	    }
-	    // Indicar inicio y final del tablero
-	    tablero[1][1] = "  $  |";
-	    tablero[dimensionTablero*2-1][dimensionTablero] = "  $  |";
-	    
-	    generarCasillaEspecial(numSubidas, "subidas");
-	    generarCasillaEspecial(numBajadas, "bajadas");
-	    
-	}
-
-	public static void generarCasillaEspecial(int numEspecial, String tipo) {
-		for (int i = 0; i < numEspecial; i++) {
-			int rndFila1, rndColumna1, rndFila2, rndColumna2;
-			//Generar una casilla random y verificar que no este ocupado
-			do {
-				rndFila1 = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1) * 2 - 1;
-				rndColumna1 = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1);
-			} while (! tablero[rndFila1][rndColumna1].equals("     |"));
-			
-			//Generar otra casilla random y verificar que no este ocupada
-			do {
-				do //Verificar que la fila de la segunda casilla no es igual a la fila de la primera
-					rndFila2 = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1) * 2 - 1;
-				while (rndFila2 == rndFila1);
-				rndColumna2 = ThreadLocalRandom.current().nextInt(1, dimensionTablero + 1);
-			} while (! tablero[rndFila2][rndColumna2].equals("     |"));
-			
-			//Anadir un caracter especial a la casilla
-			if (tipo.equals("subidas")) {
-				tablero[rndFila1][rndColumna1] = "  "+String.valueOf((char)('A'+i))+"  |";
-				tablero[rndFila2][rndColumna2] = "  "+String.valueOf((char)('A'+i))+"  |";
-			} else {
-				tablero[rndFila1][rndColumna1] = "  "+(1+i)+"  |";
-				tablero[rndFila2][rndColumna2] = "  "+(1+i)+"  |";
-			}
-		}
-	}
-	
-	public static void dibujarTablero() {
-	//Iterate through every row and column to print the held value
-		delay(500);
-		System.out.print("\n");
-		for (int fila = dimensionTablero*2; fila >= 0; fila--) {
-			for (int columna = 0; columna <= dimensionTablero; columna++) {
-				System.out.print(tablero[fila][columna]);
-	        }
-			System.out.print("\n");
 		}
 	}
 	
 	public static void delay(int n) {
 		try {
 		    Thread.sleep(n);
-		} 
-		catch(InterruptedException ex) {
+		} catch (InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
 	}
 	
 	public static void main(String[] args) {
-		while (true) {
-			
-			menuPrincipal();
+		Inicio juego = new Inicio();
+		Tablero tablero = null;
+		int turno = 0;
+		while (true) {			
+			System.out.println(
+					"\n==== Menu Principal ====\n"
+					+ "1. Iniciar juego \n"
+					+ "2. Regresar al juego \n"
+					+ "3. Configuracion \n"
+					+ "4. Salir");
 						
 			switch (kbReader.nextInt()) {
 			case 1:
-				iniciarJuego();
+				juego = new Inicio();
+				tablero = juego.iniciarJuego();
+				turno = juego.continuarJuego(tablero, 0);
 				break;
 			case 2:
-				continuarJuego();
+				if (tablero == null) {
+					System.out.println("\nNo existe un juego en progreso. Por favor iniciar una nueva partida");
+					break;
+				}
+				System.out.println("\nEl juego continua!");
+				delay(1000);
+				turno = juego.continuarJuego(tablero, turno);
 				break;
 			case 3:
-				menuConfig();
+				juego.menuConfig();
 				break;
 			case 4:
-				System.out.println("Gracias por jugar! \n"
+				System.out.println("\nGracias por jugar!\n"
 						+ "Vuelve pronto");
 				return;
 			default:
