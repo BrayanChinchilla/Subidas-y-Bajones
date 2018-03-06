@@ -31,19 +31,22 @@ public class Tablero {
 	}
 	
 	public void generarSubida(int numEspecial) {
+		//Se genera la cantidad de subidas especificadas y se le asigna una letra a traves de algebra de char
 		for (int i = 0; i < numEspecial; i++) {
 			subida[i] = new Subida("  "+String.valueOf((char)('A'+i))+"  |", this);
 		}
 	}
 	
 	public void generarBajada(int numEspecial) {
+		//Se genera la cantidad de bajadas especificadas y se le asigna un numero que ocupe 2 espacios para mantener el formato de las casillas
 		for (int i = 0; i < numEspecial; i++) {
 			bajada[i] = new Bajada(" "+String.format("%2d", i)+"  |", this);
 		}
 	}
 	
 	public void dibujarTablero() {
-	//Itera sobre cada fila y columna e imprime el valor contenido
+		//Itera sobre cada fila y columna e imprime el valor contenido
+		//Se recorre la matriz de tal manera que el espacio (1,1) quede en la esquina inferior izquierda
 		System.out.print("\n");
 		for (int fila = dimension*2; fila >= 0; fila--) {
 			for (int columna = 0; columna <= dimension; columna++) {

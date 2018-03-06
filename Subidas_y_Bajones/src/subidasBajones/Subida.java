@@ -18,7 +18,7 @@ public class Subida {
 			columnaInicio = ThreadLocalRandom.current().nextInt(1, tablero.dimension + 1);
 		} while (! tablero.matriz[filaInicio][columnaInicio].equals("     |"));
 		
-		//Generar otra casilla random y verificar que no este ocupada
+		//Generar otra casilla random ARRIBA de la primera, y verificar que no este ocupada
 		do {	
 			filaFinal = ThreadLocalRandom.current().nextInt((filaInicio+1)/2+1, tablero.dimension + 1) * 2 - 1;
 			columnaFinal = ThreadLocalRandom.current().nextInt(1, tablero.dimension + 1);

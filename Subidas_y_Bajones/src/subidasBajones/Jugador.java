@@ -18,7 +18,7 @@ public class Jugador {
 	}
 	
 	public void mover(int dado, Tablero tablero, Jugador[] jugador) {
-		//Limpiar la casilla en la que el jugador estaba
+		//Dejar la casilla en la que el jugador estaba tal y como la encontro antes de llegar
 		tablero.matriz[fila][columna] = casilla;
 		
 		if (fila % 4 == 1) { //Logica para filas que van de izquierda a derecha
@@ -54,23 +54,26 @@ public class Jugador {
 			columna = tablero.dimension;
 		}
 		
+		//El jugador guarda su posicion y el tablero guarda la del jugador
 		casilla = tablero.matriz[fila][columna];
 		tablero.matriz[fila][columna] = simbolo;
 	}
 
 	public void estaOcupada(Jugador[] jugador) {
-		// Logica en caso el jugador caiga en una casilla ocupada por otro jugador
+		// Si la casilla esta ocupada por otro jugador, asegurarse de que el otro jugador deje el simbolo del actual al momento de irse
 		for (int i = 0; i < jugador.length; i++) {
 			if (casilla == jugador[i].simbolo) {
 				casilla = jugador[i].casilla;
 				jugador[i].casilla = simbolo;
+				break;
 			}
 		}
 	}
 
 	public Subida puedeSubir(Tablero tablero) {
+		//Iterar sobre las subidas buscando la que tenga el mismo simbolo que la casilla del jugador
 		for (Subida s : tablero.subida) {
-			if ( s == null) {
+			if ( s == null) { //hasta que no hayan
 				return null;
 			}
 			else if (casilla.equals(s.simbolo) && fila < s.filaFinal) {
@@ -81,6 +84,7 @@ public class Jugador {
 	}
 	
 	public void subir(Tablero tablero, Subida s) {
+		//Dejar casilla anterior como estaba, y colocar al jugador al final de la subida
 		tablero.matriz[fila][columna] = casilla;
 		fila = s.filaFinal;
 		columna = s.columnaFinal;
@@ -89,8 +93,9 @@ public class Jugador {
 	}
 	
 	public Bajada puedeBajar(Tablero tablero) {
+		//Iterar sobre las bajadas buscando la que tenga el mismo simbolo que la casilla del jugador
 		for (Bajada b : tablero.bajada) {
-			if ( b == null) {
+			if ( b == null) { //hasta que no hayan
 				return null;
 			}
 			if (casilla.equals(b.simbolo) && fila > b.filaFinal) {
@@ -101,6 +106,7 @@ public class Jugador {
 	}
 	
 	public void bajar(Tablero tablero, Bajada b) {
+		//Dejar casilla anterior como estaba, y colocar al jugador al final de la bajada
 		tablero.matriz[fila][columna] = casilla;
 		fila = b.filaFinal;
 		columna = b.columnaFinal;
